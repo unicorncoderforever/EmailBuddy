@@ -48,25 +48,25 @@ import com.preethi.emailbuddy.ui.theme.EmailBuddyTheme
 
 @Composable
 internal fun rawEmailRoute(
-    summarizeViewModel: SummarizeViewModel = viewModel(factory = GenerativeViewModelFactory)
+    summarizeViewModel: EmailGeneratorViewModel = viewModel(factory = GenerativeViewModelFactory)
 ) {
     val summarizeUiState by summarizeViewModel.uiState.collectAsState()
 
-    SummarizeScreen(summarizeUiState, onSummarizeClicked = { inputText ->
-        summarizeViewModel.summarizeStreaming(inputText)
+    EmailTemplateScreen(summarizeUiState, onSummarizeClicked = { inputText ->
+        summarizeViewModel.generateEmailTemplate(inputText)
     } ,showSearchBar =  true,
         defaultText = null)
 }
 
 @Composable
 internal fun EmailTemplateRoute(
-    summarizeViewModel: SummarizeViewModel = viewModel(factory = GenerativeViewModelFactory),
+    summarizeViewModel: EmailGeneratorViewModel = viewModel(factory = GenerativeViewModelFactory),
     emailTemplate: String
 ) {
     val summarizeUiState by summarizeViewModel.uiState.collectAsState()
 
-    SummarizeScreen(summarizeUiState, onSummarizeClicked = { inputText ->
-        summarizeViewModel.summarizeStreaming(inputText)
+    EmailTemplateScreen(summarizeUiState, onSummarizeClicked = { inputText ->
+        summarizeViewModel.generateEmailTemplate(inputText)
     },
     defaultText = emailTemplate)
 
@@ -75,8 +75,8 @@ internal fun EmailTemplateRoute(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SummarizeScreen(
-    uiState: SummarizeUiState = SummarizeUiState.Loading,
+fun EmailTemplateScreen(
+    uiState: EmailGeneratorUiState = EmailGeneratorUiState.Loading,
     onSummarizeClicked: (String?) -> Unit = {},
     showSearchBar: Boolean = false,
     defaultText: String? = null,
@@ -90,7 +90,7 @@ fun SummarizeScreen(
                 FloatingActionButton(
                     onClick = {
                         when (uiState) {
-                            is SummarizeUiState.Success -> {
+                            is EmailGeneratorUiState.Success -> {
                                 val intent = Intent(Intent.ACTION_SENDTO)
                                 intent.type = "text/plain"
                                 intent.data = Uri.parse("mailto:")
@@ -152,11 +152,11 @@ fun SummarizeScreen(
                 }
             }
             when (uiState) {
-                SummarizeUiState.Initial -> {
+                EmailGeneratorUiState.Initial -> {
                     onSummarizeClicked(defaultText)
                 }
 
-                SummarizeUiState.Loading -> {
+                EmailGeneratorUiState.Loading -> {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -167,7 +167,7 @@ fun SummarizeScreen(
                     }
                 }
 
-                is SummarizeUiState.Success -> {
+                is EmailGeneratorUiState.Success -> {
                     Card(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -203,7 +203,7 @@ fun SummarizeScreen(
                     }
                 }
 
-                is SummarizeUiState.Error -> {
+                is EmailGeneratorUiState.Error -> {
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -232,6 +232,6 @@ fun SummarizeScreen(
 @Preview(showSystemUi = true)
 fun SummarizeScreenPreview() {
     EmailBuddyTheme(darkTheme = true) {
-        SummarizeScreen()
+        EmailTemplateScreen()
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
-import com.preethi.emailbuddy.ui.text.SummarizeViewModel
+import com.preethi.emailbuddy.ui.text.EmailGeneratorViewModel
 
 
 val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
@@ -20,7 +20,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
         return with(viewModelClass) {
             when {
                 isAssignableFrom(
-                    SummarizeViewModel::class.java) -> {
+                    EmailGeneratorViewModel::class.java) -> {
                     // Initialize a GenerativeModel with the `gemini-pro` AI model
                     // for text generation
                     val generativeModel = GenerativeModel(
@@ -28,7 +28,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                         apiKey = "your api key",
                         generationConfig = config
                     )
-                    SummarizeViewModel(generativeModel)
+                    EmailGeneratorViewModel(generativeModel)
                 }
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${viewModelClass.name}")

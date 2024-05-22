@@ -9,17 +9,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SummarizeViewModel(
+class EmailGeneratorViewModel(
     private val generativeModel: GenerativeModel
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<SummarizeUiState> =
-        MutableStateFlow(SummarizeUiState.Initial)
-    val uiState: StateFlow<SummarizeUiState> =
+    private val _uiState: MutableStateFlow<EmailGeneratorUiState> =
+        MutableStateFlow(EmailGeneratorUiState.Initial)
+    val uiState: StateFlow<EmailGeneratorUiState> =
         _uiState.asStateFlow()
 
     fun summarize(inputText: String) {
-        _uiState.value = SummarizeUiState.Loading
+        _uiState.value = EmailGeneratorUiState.Loading
 
         val prompt = "Write an Email regarding: $inputText"
 
@@ -28,17 +28,17 @@ class SummarizeViewModel(
             try {
                 val response = generativeModel.generateContent(prompt)
                 response.text?.let { outputContent ->
-                    _uiState.value = SummarizeUiState.Success(outputContent)
+                    _uiState.value = EmailGeneratorUiState.Success(outputContent)
                 }
             } catch (e: Exception) {
-                _uiState.value = SummarizeUiState.Error(e.localizedMessage ?: "")
+                _uiState.value = EmailGeneratorUiState.Error(e.localizedMessage ?: "")
             }
         }
     }
 
-    fun summarizeStreaming(inputText: String?) {
+    fun generateEmailTemplate(inputText: String?) {
         inputText?.let {
-            _uiState.value = SummarizeUiState.Loading
+            _uiState.value = EmailGeneratorUiState.Loading
 
             val prompt = "Write an Email regarding: $inputText"
 
@@ -48,10 +48,10 @@ class SummarizeViewModel(
                     generativeModel.generateContentStream(prompt)
                         .collect { response ->
                             outputContent += response.text
-                            _uiState.value = SummarizeUiState.Success(outputContent)
+                            _uiState.value = EmailGeneratorUiState.Success(outputContent)
                         }
                 } catch (e: Exception) {
-                    _uiState.value = SummarizeUiState.Error(e.localizedMessage ?: "")
+                    _uiState.value = EmailGeneratorUiState.Error(e.localizedMessage ?: "")
                 }
             }
         }
