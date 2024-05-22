@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">EmailBuddy</string>
+
+    <!-- Menu strings -->
+    <string name="email_summarize_title">Generate Email from text-only input</string>
+    <string name="email_summarize_description">Sample app that Email Template text</string>
+
+
+
+    <!-- Summarize sample strings -->
+    <string name="summarize_label">Text</string>
+    <string name="summarize_hint">Enter text to summarize</string>
+    <string name="action_go">Go</string>
+
+    <string name="action_try">Try it</string>
+</resources>
